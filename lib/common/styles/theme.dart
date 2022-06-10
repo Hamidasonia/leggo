@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:leggo/common/constans/fonts.dart';
 import 'package:leggo/common/styles.dart';
 
 ThemeData tdMain(BuildContext context) => ThemeData(
@@ -10,6 +11,7 @@ ThemeData tdMain(BuildContext context) => ThemeData(
     Theme.of(context).textTheme,
   ),
   primaryColor: hWhite,
+  fontFamily: kFPoppins,
   primaryColorDark: hWhite,
   primaryTextTheme: TextTheme(headline6: TextStyle(color: hWhite)),
   dividerColor: hWhite,
