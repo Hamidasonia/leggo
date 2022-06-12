@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:leggo/common/constans/fonts.dart';
 import 'package:leggo/common/constans/image.dart';
+import 'package:leggo/page/auth/auth_login_page.dart';
+import 'package:leggo/page/auth/auth_register_page.dart';
+import 'package:leggo/tool/helper.dart';
 import 'package:leggo/tool/hex_color.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -12,11 +16,13 @@ class OnBoardPage extends StatefulWidget {
 
 class _OnBoardPageState extends State<OnBoardPage> {
   late GlobalKey<ScaffoldState> _scaffoldKey;
+  late Helper _helper;
 
   @override
   void initState() {
     super.initState();
     _scaffoldKey = GlobalKey();
+    _helper = Helper();
   }
 
   @override
@@ -53,14 +59,14 @@ class _OnBoardPageState extends State<OnBoardPage> {
               label: "Masuk",
               colorButton: "433C82",
               colorText: "FFFFFF",
-              route: (){}
+              route: () => _helper.jumpToPage(context, page: const LoginPage()),
             ),
             const SizedBox(height: 20),
             _buildButton(
               label: "Daftar",
               colorButton: "9A98BF",
               colorText: "433C82",
-              route: (){},
+              route: () => _helper.jumpToPage(context, page: RegisterPage()),
             )
           ],
         ),

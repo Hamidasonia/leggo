@@ -7,11 +7,10 @@ ThemeData tdMain(BuildContext context) => ThemeData(
   primarySwatch: mOrange,
   visualDensity: VisualDensity.adaptivePlatformDensity,
   scaffoldBackgroundColor: hWhite,
-  textTheme: GoogleFonts.montserratTextTheme(
+  textTheme: GoogleFonts.poppinsTextTheme(
     Theme.of(context).textTheme,
   ),
   primaryColor: hWhite,
-  fontFamily: kFPoppins,
   primaryColorDark: hWhite,
   primaryTextTheme: TextTheme(headline6: TextStyle(color: hWhite)),
   dividerColor: hWhite,
@@ -19,10 +18,10 @@ ThemeData tdMain(BuildContext context) => ThemeData(
     elevation: 0,
     color: Colors.white,
     iconTheme: const IconThemeData(color: Colors.black),
-    toolbarTextStyle: GoogleFonts.robotoTextTheme(
+    toolbarTextStyle: GoogleFonts.poppinsTextTheme(
       Theme.of(context).textTheme,
     ).bodyText2,
-    titleTextStyle: GoogleFonts.robotoTextTheme(
+    titleTextStyle: GoogleFonts.poppinsTextTheme(
       Theme.of(context).textTheme,
     ).headline6,
   ),
