@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:leggo/common/constans/fonts.dart';
 import 'package:leggo/common/styles.dart';
 
 ThemeData tdMain(BuildContext context) => ThemeData(
   primarySwatch: mOrange,
   visualDensity: VisualDensity.adaptivePlatformDensity,
   scaffoldBackgroundColor: hWhite,
-  textTheme: GoogleFonts.montserratTextTheme(
+  textTheme: GoogleFonts.poppinsTextTheme(
     Theme.of(context).textTheme,
   ),
   primaryColor: hWhite,
@@ -17,10 +18,10 @@ ThemeData tdMain(BuildContext context) => ThemeData(
     elevation: 0,
     color: Colors.white,
     iconTheme: const IconThemeData(color: Colors.black),
-    toolbarTextStyle: GoogleFonts.robotoTextTheme(
+    toolbarTextStyle: GoogleFonts.poppinsTextTheme(
       Theme.of(context).textTheme,
     ).bodyText2,
-    titleTextStyle: GoogleFonts.robotoTextTheme(
+    titleTextStyle: GoogleFonts.poppinsTextTheme(
       Theme.of(context).textTheme,
     ).headline6,
   ),

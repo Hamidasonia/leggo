@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Leggo</string>
+    <string name="masuk">Masuk</string>
+    <string name="lupa_kata_s">Lupa Kata Sandi?</string>
+    <string name="belum_punya">Belum punya akun? Daftar</string>
+    <string name="atau_masuk_">atau masuk dengan</string>
+    <string name="daftar">Daftar</string>
+</resources>
