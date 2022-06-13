@@ -17,6 +17,8 @@ class SingletonModel {
 
   static SingletonModel get shared => _singleton;
 
+  late bool isLogin;
   UserModel? user;
   late BuildContext context;
+  User? getUser;
 }

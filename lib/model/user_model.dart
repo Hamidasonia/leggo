@@ -1,63 +1,67 @@
 class UserModel {
   UserModel({
-    this.user,
-    this.tokenType,
-    this.expiresIn,
-    this.token,
-    this.refreshToken,
+    this.data,
   });
 
-  User? user;
-  String? tokenType;
-  int? expiresIn;
-  String? token;
-  String? refreshToken;
+  Data? data;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    user: json["user"] == null ? null : User.fromJson(json["user"]),
-    tokenType: json["token_type"],
-    expiresIn: json["expires_in"],
-    token: json["token"],
-    refreshToken: json["refresh_token"],
+    data: Data.fromJson(json["data"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "user": user?.toJson(),
-    "token_type": tokenType,
-    "expires_in": expiresIn,
-    "token": token,
-    "refresh_token": refreshToken,
+    "data": data?.toJson(),
+  };
+}
+
+class Data {
+  Data({
+    this.users,
+  });
+
+  List<User>? users;
+
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+    users: List<User>.from(json["users"].map((x) => User.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "users": List<dynamic>.from(users!.map((x) => x.toJson())),
   };
 }
 
 class User {
   User({
     this.id,
-    this.name,
+    this.fullname,
     this.email,
-    this.phoneNumber,
-    this.profilePhotoUrl,
+    this.username,
+    this.password,
+    this.tglDaftar,
   });
 
   int? id;
-  String? name;
+  String? fullname;
   String? email;
-  String? phoneNumber;
-  String? profilePhotoUrl;
+  String? username;
+  String? password;
+  DateTime? tglDaftar;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
     id: json["id"],
-    name: json["name"],
+    fullname: json["fullname"],
     email: json["email"],
-    phoneNumber: json["phone_number"],
-    profilePhotoUrl: json["profile_photo_url"],
+    username: json["username"],
+    password: json["password"],
+    tglDaftar: DateTime.parse(json["tgl_daftar"]),
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
-    "name": name,
+    "fullname": fullname,
     "email": email,
-    "phone_number": phoneNumber,
-    "profile_photo_url": profilePhotoUrl,
+    "username": username,
+    "password": password,
+    "tgl_daftar": "${tglDaftar?.year.toString().padLeft(4, '0')}-${tglDaftar?.month.toString().padLeft(2, '0')}-${tglDaftar?.day.toString().padLeft(2, '0')}",
   };
 }

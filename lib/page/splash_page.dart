@@ -1,10 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:leggo/api/session_manager.dart';
 import 'package:leggo/common/constans/image.dart';
+import 'package:leggo/model/app/singleton_model.dart';
+import 'package:leggo/page/main_page.dart';
 import 'package:leggo/page/onboard_page.dart';
 import 'package:leggo/tool/helper.dart';
 import 'package:leggo/tool/hex_color.dart';
+import 'package:leggo/tool/permissions_service.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -16,6 +20,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   late GlobalKey<ScaffoldState> _scaffoldKey;
   late AnimationController _controller;
+  late SingletonModel _model;
 
   @override
   void initState() {
@@ -28,21 +33,31 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
         setState(() {});
       });
     _controller.forward();
-    _startSplash();
+    _model = SingletonModel.withContext(context);
+    _model.user?.data?.users = [];
+    _model.isLogin = false;
+    _cekSession();
   }
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
-  _startSplash() {
-    var duration = const Duration(milliseconds: 6900);
-    return Timer(duration, () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) {
-        return const OnBoardPage();
-      }));
+  Future _cekSession() async {
+    return Future.delayed(const Duration(milliseconds: 5900), () {
+      session.getSession().then((value) {
+        if (value != null) {
+          Navigator.pushAndRemoveUntil(
+              context, MaterialPageRoute(builder: (_) => MainPage()), (
+              route) => false);
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context, MaterialPageRoute(builder: (_) => OnBoardPage()), (
+              route) => false);
+        }
+      });
     });
   }
 

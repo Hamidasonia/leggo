@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:leggo/api/api.dart';
+import 'package:leggo/api/session_manager.dart';
 import 'package:leggo/common/constans/icon.dart';
+import 'package:leggo/model/app/singleton_model.dart';
+import 'package:leggo/model/user_model.dart';
 import 'package:leggo/page/auth/auth_register_page.dart';
+import 'package:leggo/page/main_page.dart';
 import 'package:leggo/tool/helper.dart';
 import 'package:leggo/tool/hex_color.dart';
 
@@ -18,6 +25,8 @@ class _LoginPageState extends State<LoginPage> {
   late TextEditingController _cPassword;
   late Helper _helper;
   late bool _obscurePassword;
+  late bool _processLogin;
+  late SingletonModel _model;
 
   @override
   void initState() {
@@ -28,6 +37,44 @@ class _LoginPageState extends State<LoginPage> {
     _cPassword = TextEditingController();
     _helper = Helper();
     _obscurePassword = false;
+    _processLogin = false;
+    _model = SingletonModel.withContext(context);
+  }
+
+  Future<UserModel?> _loginUser() async {
+    try {
+      setState(() {
+        _model.isLogin = true;
+      });
+      final MutationOptions options =
+          MutationOptions(document: gql(QueryDatabase.loginUser), variables: {
+        'email': _cEmail.text,
+        'password': _cPassword.text,
+      });
+      final QueryResult result =
+          await QueryDatabase.client.value.mutate(options);
+      List<User>? lisUser = Data.fromJson(result.data!).users;
+      if (lisUser?[0].email == _cEmail.text &&
+          lisUser?[0].password == _cPassword.text) {
+        setState(() {
+          session.saveSession(lisUser![0].id!);
+          _model.isLogin = false;
+          _helper.moveToPage(context, page: MainPage());
+          _model.getUser = lisUser[0];
+        });
+      } else {
+        setState(() {
+          _model.isLogin = false;
+          _helper.showToast("Email atau password anda tidak valid");
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _model.isLogin = false;
+        _helper.showToast("$e");
+        print(e);
+      });
+    }
   }
 
   @override
@@ -74,6 +121,9 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 30),
             TextFormField(
               controller: _cEmail,
+              validator: (val) {
+                return val!.isEmpty ? "Tidak boleh kosong" : null;
+              },
               keyboardType: TextInputType.emailAddress,
               style: const TextStyle(color: Colors.black),
               textInputAction: TextInputAction.next,
@@ -98,14 +148,8 @@ class _LoginPageState extends State<LoginPage> {
               controller: _cPassword,
               obscureText: !_obscurePassword,
               style: const TextStyle(color: Colors.black),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Password field is required';
-                }
-                if (value.trim().length < 8) {
-                  return 'Password must be at least 8 characters';
-                }
-                return null;
+              validator: (val) {
+                return val!.isEmpty ? "Tidak boleh kosong" : null;
               },
               decoration: InputDecoration(
                 hintText: "Password",
@@ -145,20 +189,37 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 30),
             Center(
               child: MaterialButton(
-                onPressed: () {},
+                onPressed: () async {
+                  if (!_processLogin) {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        _processLogin = true;
+                      });
+                      await _loginUser();
+                    }
+                    setState(() {
+                      _processLogin = false;
+                    });
+                  }
+                },
                 height: 50,
                 minWidth: 150,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
                 color: HexColor("#433C82"),
-                child: const Text(
-                  "Masuk",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
+                child: _processLogin
+                    ? const SpinKitThreeBounce(
+                        color: Colors.white,
+                        size: 24,
+                      )
+                    : const Text(
+                        "Masuk",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
               ),
             ),
             const SizedBox(height: 10),
@@ -171,7 +232,8 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(fontSize: 16),
                 ),
                 InkWell(
-                  onTap: () => _helper.moveToPage(context, page: const RegisterPage()),
+                  onTap: () =>
+                      _helper.moveToPage(context, page: const RegisterPage()),
                   child: Text(
                     "Daftar",
                     style: TextStyle(
